@@ -2,30 +2,25 @@
 
 #include "memory.h"
 #include "first_fit.h"
+#include "paging.h"
 
 int main() {
 
-    initializeMemory();
+    initializePaging();
 
-    printf("Initial Memory\n");
+    allocatePaged(1, 20);
+    allocatePaged(2, 12);
+    allocatePaged(3, 30);
+
     displayMemory();
+    displayPageTable();
 
-    allocateFirstFit(1, 20);
-    allocateFirstFit(2, 15);
-    allocateFirstFit(3, 10);
+    freePaged(2);
 
-    printf("After Allocations\n");
+    printf("\nAfter Freeing P2\n");
+
     displayMemory();
-
-    freeMemory(2);
-
-    printf("After Freeing Process 2\n");
-    displayMemory();
-
-    allocateFirstFit(4, 12);
-
-    printf("After Allocating Process 4\n");
-    displayMemory();
+    displayPageTable();
 
     return 0;
 }
