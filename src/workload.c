@@ -5,51 +5,91 @@
 #include "paging.h"
 #include "metrics.h"
 
-void runFirstFitWorkload() {
-
+void runFirstFitWorkload()
+{
     Metrics m;
     initializeMetrics(&m);
 
     initializeMemory();
 
-    int sizes[] = {20, 15, 10, 25, 12, 18};
+    m.allocationsAttempted++;
+    if (allocateFirstFit(1, 20) != -1)
+        m.allocationsSucceeded++;
+    else
+        m.allocationsFailed++;
 
-    for(int i = 0; i < 6; i++) {
+    m.allocationsAttempted++;
+    if (allocateFirstFit(2, 15) != -1)
+        m.allocationsSucceeded++;
+    else
+        m.allocationsFailed++;
 
-        m.allocationsAttempted++;
+    m.allocationsAttempted++;
+    if (allocateFirstFit(3, 10) != -1)
+        m.allocationsSucceeded++;
+    else
+        m.allocationsFailed++;
 
-        if(allocateFirstFit(i + 1, sizes[i]) != -1)
-            m.allocationsSucceeded++;
-        else
-            m.allocationsFailed++;
-    }
+    freeMemory(2);
 
-    printf("\n===== FIRST FIT =====\n");
+    m.allocationsAttempted++;
+    if (allocateFirstFit(4, 12) != -1)
+        m.allocationsSucceeded++;
+    else
+        m.allocationsFailed++;
+
+    m.allocationsAttempted++;
+    if (allocateFirstFit(5, 18) != -1)
+        m.allocationsSucceeded++;
+    else
+        m.allocationsFailed++;
+
+    printf("\n== FIRST FIT ==\n");
 
     displayMemory();
     printMetrics(&m);
 }
 
-void runPagingWorkload() {
-
+void runPagingWorkload()
+{
     Metrics m;
     initializeMetrics(&m);
 
     initializePaging();
 
-    int sizes[] = {20, 15, 10, 25, 12, 18};
+    m.allocationsAttempted++;
+    if (allocatePaged(1, 20) != -1)
+        m.allocationsSucceeded++;
+    else
+        m.allocationsFailed++;
 
-    for(int i = 0; i < 6; i++) {
+    m.allocationsAttempted++;
+    if (allocatePaged(2, 15) != -1)
+        m.allocationsSucceeded++;
+    else
+        m.allocationsFailed++;
 
-        m.allocationsAttempted++;
+    m.allocationsAttempted++;
+    if (allocatePaged(3, 10) != -1)
+        m.allocationsSucceeded++;
+    else
+        m.allocationsFailed++;
 
-        if(allocatePaged(i + 1, sizes[i]) != -1)
-            m.allocationsSucceeded++;
-        else
-            m.allocationsFailed++;
-    }
+    freePaged(2);
 
-    printf("\n===== PAGING =====\n");
+    m.allocationsAttempted++;
+    if (allocatePaged(4, 12) != -1)
+        m.allocationsSucceeded++;
+    else
+        m.allocationsFailed++;
+
+    m.allocationsAttempted++;
+    if (allocatePaged(5, 18) != -1)
+        m.allocationsSucceeded++;
+    else
+        m.allocationsFailed++;
+
+    printf("\n== PAGING ==\n");
 
     displayMemory();
     displayPageTable();
