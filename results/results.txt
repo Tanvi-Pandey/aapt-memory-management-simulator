@@ -1,5 +1,13 @@
 ========== FIRST FIT ==========
 Attempts      : 5000
-Succeeded     : 1215
-Failed        : 3785
-ExecutionTime : 0.000000 seconds
+Succeeded     : 48
+Failed        : 4952
+Utilization   : 97.66%
+Fragmentation : 66.67%
+
+========== PAGING ==========
+Attempts      : 5000
+Succeeded     : 118
+Failed        : 4882
+Utilization   : 100.00%
+Fragmentation : 0.00%

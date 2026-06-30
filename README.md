@@ -1,53 +1,78 @@
-# AAPT: Advanced Attention-based Paging Technique
-
-AAPT is a C-based memory management simulator that compares traditional contiguous memory allocation with a modern paging-based allocation strategy inspired by PagedAttention and contemporary AI infrastructure.
+# AAPT Memory Management Simulator
 
 ## Overview
 
-Traditional memory allocation techniques such as First-Fit suffer from external fragmentation, reducing memory utilization and increasing allocation failures under dynamic workloads.
+This project is an Operating Systems simulator that compares two memory allocation techniques:
 
-AAPT demonstrates how paging can overcome these limitations by allocating memory in fixed-size frames and maintaining logical-to-physical mappings through page tables.
+- First-Fit Contiguous Memory Allocation
+- Paging Memory Allocation
+
+The simulator evaluates both techniques using randomly generated workloads and compares them based on:
+
+- Allocation Success Rate
+- Memory Utilization
+- External Fragmentation
+- Execution Time
+
 
 ## Features
 
-- Physical Memory Simulation
-- First-Fit Contiguous Allocation
-- Paging-Based Allocation
-- Page Table Management
-- Fragmentation Analysis
-- Throughput Measurement
-- Allocation Latency Tracking
-- Bursty Workload Simulation
+- First-Fit memory allocation
+- Paging memory allocation
+- Dynamic process allocation/deallocation
+- Bursty workload simulation
+- Memory utilization analysis
+- External fragmentation calculation
+- Execution time benchmarking
+- Page table visualization
+
 
 ## Project Structure
 
-```
-aapt-memory-management-simulator/
+aapt-memory-management-simulator
+│
+├── src
+│   ├── main.c
+│   ├── memory.c
+│   ├── first_fit.c
+│   ├── paging.c
+│   ├── workload.c
+│   ├── metrics.c
+│   └── *.h
+│
+├── results
+│   └── results.txt
+│
+├── docs
 │
 ├── README.md
-├── .gitignore
-│
-├── src/
-├── data/
-├── docs/
-└── results/
-```
+└── .gitignore
 
-## Tech Stack
+## Build
 
-- C Programming Language
-- GCC Compiler
-- Git & GitHub
+```bash
+gcc src/*.c -o aapt
 
-## Future Goals
 
-- Compare allocation success rates
-- Measure memory utilization
-- Analyze fragmentation
-- Benchmark paging against First-Fit allocation
+Windows
 
-## References
+```bash
+gcc src/*.c -o aapt.exe
 
-- PagedAttention (SOSP 2023)
-- vAttention (2024)
-- Operating System Concepts – Silberschatz
+## Run
+
+```bash
+./aapt
+or
+```bash
+aapt.exe
+
+## Future Improvements
+
+- Best-Fit Allocation
+- Worst-Fit Allocation
+- Buddy Memory Allocation
+- Graphical Memory Visualization
+- Virtual Memory Simulation
+
+
