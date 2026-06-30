@@ -1,0 +1,5 @@
+========== FIRST FIT ==========
+Attempts      : 5000
+Succeeded     : 1215
+Failed        : 3785
+ExecutionTime : 0.000000 seconds

@@ -1,7 +1,7 @@
 #include "workload.h"
 
-int main() {
-
+int main()
+{
     runFirstFitWorkload();
 
     runPagingWorkload();

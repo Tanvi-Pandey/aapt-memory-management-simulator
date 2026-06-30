@@ -1,9 +1,13 @@
 #include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
 
 #include "memory.h"
 #include "first_fit.h"
 #include "paging.h"
 #include "metrics.h"
+
+#define NUM_REQUESTS 5000
 
 void runFirstFitWorkload()
 {
@@ -12,42 +16,53 @@ void runFirstFitWorkload()
 
     initializeMemory();
 
-    m.allocationsAttempted++;
-    if (allocateFirstFit(1, 20) != -1)
-        m.allocationsSucceeded++;
-    else
-        m.allocationsFailed++;
+    srand((unsigned)time(NULL));
 
-    m.allocationsAttempted++;
-    if (allocateFirstFit(2, 15) != -1)
-        m.allocationsSucceeded++;
-    else
-        m.allocationsFailed++;
+    clock_t start = clock();
 
-    m.allocationsAttempted++;
-    if (allocateFirstFit(3, 10) != -1)
-        m.allocationsSucceeded++;
-    else
-        m.allocationsFailed++;
+    for (int i = 1; i <= NUM_REQUESTS; i++)
+    {
+        int pid = (i % 99) + 1;
+        int size = rand() % 20 + 5;
 
-    freeMemory(2);
+        m.allocationsAttempted++;
 
-    m.allocationsAttempted++;
-    if (allocateFirstFit(4, 12) != -1)
-        m.allocationsSucceeded++;
-    else
-        m.allocationsFailed++;
+        if (allocateFirstFit(pid, size) != -1)
+            m.allocationsSucceeded++;
+        else
+            m.allocationsFailed++;
 
-    m.allocationsAttempted++;
-    if (allocateFirstFit(5, 18) != -1)
-        m.allocationsSucceeded++;
-    else
-        m.allocationsFailed++;
+        /* Create fragmentation */
+        if (i % 5 == 0)
+        {
+            int freePid = ((i - 2) % 99) + 1;
+            freeMemory(freePid);
+        }
+    }
 
-    printf("\n== FIRST FIT ==\n");
+    clock_t end = clock();
+
+    printf("\n========== FIRST FIT ==========\n");
 
     displayMemory();
     printMetrics(&m);
+
+    printf("Execution Time : %.6f seconds\n",
+           (double)(end - start) / CLOCKS_PER_SEC);
+
+    FILE *fp = fopen("results/results.txt", "w");
+
+    if (fp != NULL)
+    {
+        fprintf(fp, "========== FIRST FIT ==========\n");
+        fprintf(fp, "Attempts      : %d\n", m.allocationsAttempted);
+        fprintf(fp, "Succeeded     : %d\n", m.allocationsSucceeded);
+        fprintf(fp, "Failed        : %d\n", m.allocationsFailed);
+        fprintf(fp, "ExecutionTime : %.6f seconds\n",
+                (double)(end - start) / CLOCKS_PER_SEC);
+
+        fclose(fp);
+    }
 }
 
 void runPagingWorkload()
@@ -57,41 +72,52 @@ void runPagingWorkload()
 
     initializePaging();
 
-    m.allocationsAttempted++;
-    if (allocatePaged(1, 20) != -1)
-        m.allocationsSucceeded++;
-    else
-        m.allocationsFailed++;
+    /* Use the same random sequence as First-Fit */
+    srand((unsigned)time(NULL));
 
-    m.allocationsAttempted++;
-    if (allocatePaged(2, 15) != -1)
-        m.allocationsSucceeded++;
-    else
-        m.allocationsFailed++;
+    clock_t start = clock();
 
-    m.allocationsAttempted++;
-    if (allocatePaged(3, 10) != -1)
-        m.allocationsSucceeded++;
-    else
-        m.allocationsFailed++;
+    for (int i = 1; i <= NUM_REQUESTS; i++)
+    {
+        int pid = (i % 99) + 1;
+        int size = rand() % 20 + 5;
 
-    freePaged(2);
+        m.allocationsAttempted++;
 
-    m.allocationsAttempted++;
-    if (allocatePaged(4, 12) != -1)
-        m.allocationsSucceeded++;
-    else
-        m.allocationsFailed++;
+        if (allocatePaged(pid, size) != -1)
+            m.allocationsSucceeded++;
+        else
+            m.allocationsFailed++;
 
-    m.allocationsAttempted++;
-    if (allocatePaged(5, 18) != -1)
-        m.allocationsSucceeded++;
-    else
-        m.allocationsFailed++;
+        if (i % 5 == 0)
+        {
+            int freePid = ((i - 2) % 99) + 1;
+            freePaged(freePid);
+        }
+    }
 
-    printf("\n== PAGING ==\n");
+    clock_t end = clock();
+
+    printf("\n========== PAGING ==========\n");
 
     displayMemory();
     displayPageTable();
     printMetrics(&m);
+
+    printf("Execution Time : %.6f seconds\n",
+           (double)(end - start) / CLOCKS_PER_SEC);
+
+    FILE *fp = fopen("results/results.txt", "a");
+
+    if (fp != NULL)
+    {
+        fprintf(fp, "\n========== PAGING ==========\n");
+        fprintf(fp, "Attempts      : %d\n", m.allocationsAttempted);
+        fprintf(fp, "Succeeded     : %d\n", m.allocationsSucceeded);
+        fprintf(fp, "Failed        : %d\n", m.allocationsFailed);
+        fprintf(fp, "ExecutionTime : %.6f seconds\n",
+                (double)(end - start) / CLOCKS_PER_SEC);
+
+        fclose(fp);
+    }
 }

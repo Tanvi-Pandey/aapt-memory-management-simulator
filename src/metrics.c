@@ -43,9 +43,17 @@ void calculateMemoryMetrics(Metrics *m)
     if(m->freeMemory == 0)
         m->fragmentation = 0;
     else
-        m->fragmentation =
-            100.0 *
-            (1.0 - ((double)largestFreeBlock / m->freeMemory));
+       if (m->freeMemory > 0)
+{
+    m->fragmentation =
+        100.0 *
+        (m->freeMemory - largestFreeBlock) /
+        m->freeMemory;
+}
+else
+{
+    m->fragmentation = 0;
+}
 }
 
 void printMetrics(Metrics *m)
